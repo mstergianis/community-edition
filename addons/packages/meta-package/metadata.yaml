@@ -1,0 +1,13 @@
+---
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: meta-package.community.tanzu.vmware.com
+spec:
+  displayName: "Meta-Package for TCE"
+  shortDescription: "Package to install a set of OSS components to get you started."
+  longDescription: "Meta-Package lets you install a setup of curated components in one go."
+  providerName: "VMware"
+  maintainers:
+    - name: "Kris Applegate"
+  supportDescription: "For help go to #tanzu-community-edition in the kubernetes slack workspace."

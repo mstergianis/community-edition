@@ -1,0 +1,35 @@
+---
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: meta-package.community.tanzu.vmware.com.0.1.0
+spec:
+  refName: meta-package.community.tanzu.vmware.com
+  version: 0.1.0
+  releasedAt: 2022-02-01T14:53:24Z
+  licenses:
+    - "Apache 2.0"
+  template:
+    spec:
+      fetch:
+        - imgpkgBundle:
+            image: ""
+      template:
+        - ytt:
+            paths:
+              - config/
+        - kbld:
+            paths:
+              - "-"
+              - .imgpkg/images.yaml
+      deploy:
+        - kapp: {}
+  valuesSchema:
+    openAPIv3:
+      type: object
+      additionalProperties: false
+      properties:
+        placeholder:
+          type: string
+          default: "empty"
+          description: "placeholder for the values file"
