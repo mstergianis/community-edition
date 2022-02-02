@@ -13,7 +13,7 @@ spec:
     spec:
       fetch:
         - imgpkgBundle:
-            image: ""
+            image: "harbor-repo.vmware.com/mstergianis/meta-package-bundle@sha256:174f79f31b1d8c76c4498fbf3cdb70fd12675ba49d1f6838bbe8662524f4f93c"
       template:
         - ytt:
             paths:
