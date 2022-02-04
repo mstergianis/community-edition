@@ -1,0 +1,165 @@
+Creating cluster "meta" ...
+ • Ensuring node image (kindest/node:v1.21.1) 🖼  ...
+ ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+ • Preparing nodes 📦   ...
+ ✓ Preparing nodes 📦 
+ • Writing configuration 📜  ...
+ ✓ Writing configuration 📜
+ • Starting control-plane 🕹️  ...
+ ✓ Starting control-plane 🕹️
+ • Installing CNI 🔌  ...
+ ✓ Installing CNI 🔌
+ • Installing StorageClass 💾  ...
+ ✓ Installing StorageClass 💾
+Set kubectl context to "kind-meta"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-meta
+
+Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
+error: flag needs an argument: 'f' in -f
+See 'kubectl apply --help' for usage.
+Target cluster 'https://127.0.0.1:42577' (nodes: meta-control-plane)
+
+Changes
+
+Namespace        Name                                                    Kind                      Conds.  Age  Op      Op st.  Wait to    Rs  Ri  
+(cluster)        apps.kappctrl.k14s.io                                   CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                internalpackagemetadatas.internal.packaging.carvel.dev  CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                internalpackages.internal.packaging.carvel.dev          CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                kapp-controller                                         Namespace                 -       -    create  -       reconcile  -   -  
+^                kapp-controller-cluster-role                            ClusterRole               -       -    create  -       reconcile  -   -  
+^                kapp-controller-cluster-role-binding                    ClusterRoleBinding        -       -    create  -       reconcile  -   -  
+^                kapp-controller-packaging-global                        Namespace                 -       -    create  -       reconcile  -   -  
+^                packageinstalls.packaging.carvel.dev                    CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                packagerepositories.packaging.carvel.dev                CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                pkg-apiserver:system:auth-delegator                     ClusterRoleBinding        -       -    create  -       reconcile  -   -  
+^                v1alpha1.data.packaging.carvel.dev                      APIService                -       -    create  -       reconcile  -   -  
+kapp-controller  kapp-controller                                         Deployment                -       -    create  -       reconcile  -   -  
+^                kapp-controller-sa                                      ServiceAccount            -       -    create  -       reconcile  -   -  
+^                packaging-api                                           Service                   -       -    create  -       reconcile  -   -  
+kube-system      pkgserver-auth-reader                                   RoleBinding               -       -    create  -       reconcile  -   -  
+
+Op:      15 create, 0 delete, 0 update, 0 noop, 0 exists
+Wait to: 15 reconcile, 0 delete, 0 noop
+
+11:05:31AM: ---- applying 9 changes [0/15 done] ----
+11:05:31AM: create namespace/kapp-controller-packaging-global (v1) cluster
+11:05:31AM: create namespace/kapp-controller (v1) cluster
+11:05:31AM: create clusterrole/kapp-controller-cluster-role (rbac.authorization.k8s.io/v1) cluster
+11:05:32AM: create apiservice/v1alpha1.data.packaging.carvel.dev (apiregistration.k8s.io/v1) cluster
+11:05:32AM: create customresourcedefinition/packageinstalls.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:32AM: create customresourcedefinition/packagerepositories.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:32AM: create customresourcedefinition/internalpackages.internal.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:32AM: create customresourcedefinition/apps.kappctrl.k14s.io (apiextensions.k8s.io/v1) cluster
+11:05:33AM: create customresourcedefinition/internalpackagemetadatas.internal.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:33AM: ---- waiting on 9 changes [0/15 done] ----
+11:05:33AM: ok: reconcile namespace/kapp-controller-packaging-global (v1) cluster
+11:05:33AM: ok: reconcile clusterrole/kapp-controller-cluster-role (rbac.authorization.k8s.io/v1) cluster
+11:05:33AM: ok: reconcile customresourcedefinition/internalpackagemetadatas.internal.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:33AM: ok: reconcile customresourcedefinition/packageinstalls.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:33AM: ok: reconcile customresourcedefinition/packagerepositories.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:33AM: ok: reconcile namespace/kapp-controller (v1) cluster
+11:05:33AM: ongoing: reconcile apiservice/v1alpha1.data.packaging.carvel.dev (apiregistration.k8s.io/v1) cluster
+11:05:33AM:  ^ Condition Available is not True (False)
+11:05:33AM: ok: reconcile customresourcedefinition/internalpackages.internal.packaging.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:05:33AM: ok: reconcile customresourcedefinition/apps.kappctrl.k14s.io (apiextensions.k8s.io/v1) cluster
+11:05:33AM: ---- applying 4 changes [9/15 done] ----
+11:05:33AM: create serviceaccount/kapp-controller-sa (v1) namespace: kapp-controller
+11:05:33AM: create rolebinding/pkgserver-auth-reader (rbac.authorization.k8s.io/v1) namespace: kube-system
+11:05:33AM: create clusterrolebinding/pkg-apiserver:system:auth-delegator (rbac.authorization.k8s.io/v1) cluster
+11:05:33AM: create clusterrolebinding/kapp-controller-cluster-role-binding (rbac.authorization.k8s.io/v1) cluster
+11:05:33AM: ---- waiting on 5 changes [8/15 done] ----
+11:05:33AM: ok: reconcile serviceaccount/kapp-controller-sa (v1) namespace: kapp-controller
+11:05:33AM: ok: reconcile clusterrolebinding/kapp-controller-cluster-role-binding (rbac.authorization.k8s.io/v1) cluster
+11:05:33AM: ok: reconcile rolebinding/pkgserver-auth-reader (rbac.authorization.k8s.io/v1) namespace: kube-system
+11:05:33AM: ok: reconcile clusterrolebinding/pkg-apiserver:system:auth-delegator (rbac.authorization.k8s.io/v1) cluster
+11:05:33AM: ---- applying 2 changes [13/15 done] ----
+11:05:33AM: create service/packaging-api (v1) namespace: kapp-controller
+11:05:33AM: create deployment/kapp-controller (apps/v1) namespace: kapp-controller
+11:05:33AM: ---- waiting on 3 changes [12/15 done] ----
+11:05:33AM: ok: reconcile service/packaging-api (v1) namespace: kapp-controller
+11:05:33AM: ongoing: reconcile deployment/kapp-controller (apps/v1) namespace: kapp-controller
+11:05:33AM:  ^ Waiting for generation 2 to be observed
+11:05:33AM: ---- waiting on 2 changes [13/15 done] ----
+11:05:42AM: ongoing: reconcile deployment/kapp-controller (apps/v1) namespace: kapp-controller
+11:05:42AM:  ^ Waiting for 1 unavailable replicas
+11:05:42AM:  L ok: waiting on replicaset/kapp-controller-55764b7fc (apps/v1) namespace: kapp-controller
+11:05:42AM:  L ongoing: waiting on pod/kapp-controller-55764b7fc-4scsr (v1) namespace: kapp-controller
+11:05:42AM:     ^ Pending: Unschedulable (message: 0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.)
+11:06:15AM: ongoing: reconcile deployment/kapp-controller (apps/v1) namespace: kapp-controller
+11:06:15AM:  ^ Waiting for 1 unavailable replicas
+11:06:15AM:  L ok: waiting on replicaset/kapp-controller-55764b7fc (apps/v1) namespace: kapp-controller
+11:06:15AM:  L ongoing: waiting on pod/kapp-controller-55764b7fc-4scsr (v1) namespace: kapp-controller
+11:06:15AM:     ^ Pending: ContainerCreating
+11:06:31AM: ok: reconcile deployment/kapp-controller (apps/v1) namespace: kapp-controller
+11:06:31AM: ---- waiting on 1 changes [14/15 done] ----
+11:06:33AM: ongoing: reconcile apiservice/v1alpha1.data.packaging.carvel.dev (apiregistration.k8s.io/v1) cluster
+11:06:33AM:  ^ Condition Available is not True (False)
+11:06:39AM: ok: reconcile apiservice/v1alpha1.data.packaging.carvel.dev (apiregistration.k8s.io/v1) cluster
+11:06:39AM: ---- applying complete [15/15 done] ----
+11:06:39AM: ---- waiting complete [15/15 done] ----
+
+Succeeded
+Target cluster 'https://127.0.0.1:42577' (nodes: meta-control-plane)
+
+Changes
+
+Namespace             Name                                       Kind                      Conds.  Age  Op      Op st.  Wait to    Rs  Ri  
+(cluster)             certificates.secretgen.k14s.io             CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                     passwords.secretgen.k14s.io                CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                     rsakeys.secretgen.k14s.io                  CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                     secretexports.secretgen.carvel.dev         CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                     secretgen-controller                       Namespace                 -       -    create  -       reconcile  -   -  
+^                     secretgen-controller-cluster-role          ClusterRole               -       -    create  -       reconcile  -   -  
+^                     secretgen-controller-cluster-role-binding  ClusterRoleBinding        -       -    create  -       reconcile  -   -  
+^                     secretimports.secretgen.carvel.dev         CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+^                     sshkeys.secretgen.k14s.io                  CustomResourceDefinition  -       -    create  -       reconcile  -   -  
+secretgen-controller  secretgen-controller                       Deployment                -       -    create  -       reconcile  -   -  
+^                     secretgen-controller-sa                    ServiceAccount            -       -    create  -       reconcile  -   -  
+
+Op:      11 create, 0 delete, 0 update, 0 noop, 0 exists
+Wait to: 11 reconcile, 0 delete, 0 noop
+
+11:06:40AM: ---- applying 8 changes [0/11 done] ----
+11:06:40AM: create namespace/secretgen-controller (v1) cluster
+11:06:40AM: create clusterrole/secretgen-controller-cluster-role (rbac.authorization.k8s.io/v1) cluster
+11:06:41AM: create customresourcedefinition/secretimports.secretgen.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:06:41AM: create customresourcedefinition/sshkeys.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:41AM: create customresourcedefinition/passwords.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:41AM: create customresourcedefinition/secretexports.secretgen.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:06:41AM: create customresourcedefinition/certificates.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:42AM: create customresourcedefinition/rsakeys.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:42AM: ---- waiting on 8 changes [0/11 done] ----
+11:06:42AM: ok: reconcile customresourcedefinition/secretexports.secretgen.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:06:42AM: ok: reconcile customresourcedefinition/rsakeys.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:42AM: ok: reconcile customresourcedefinition/secretimports.secretgen.carvel.dev (apiextensions.k8s.io/v1) cluster
+11:06:42AM: ok: reconcile customresourcedefinition/passwords.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:42AM: ok: reconcile customresourcedefinition/sshkeys.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:42AM: ok: reconcile namespace/secretgen-controller (v1) cluster
+11:06:42AM: ok: reconcile clusterrole/secretgen-controller-cluster-role (rbac.authorization.k8s.io/v1) cluster
+11:06:42AM: ok: reconcile customresourcedefinition/certificates.secretgen.k14s.io (apiextensions.k8s.io/v1) cluster
+11:06:42AM: ---- applying 2 changes [8/11 done] ----
+11:06:42AM: create clusterrolebinding/secretgen-controller-cluster-role-binding (rbac.authorization.k8s.io/v1) cluster
+11:06:42AM: create serviceaccount/secretgen-controller-sa (v1) namespace: secretgen-controller
+11:06:42AM: ---- waiting on 2 changes [8/11 done] ----
+11:06:42AM: ok: reconcile clusterrolebinding/secretgen-controller-cluster-role-binding (rbac.authorization.k8s.io/v1) cluster
+11:06:42AM: ok: reconcile serviceaccount/secretgen-controller-sa (v1) namespace: secretgen-controller
+11:06:42AM: ---- applying 1 changes [10/11 done] ----
+11:06:43AM: create deployment/secretgen-controller (apps/v1) namespace: secretgen-controller
+11:06:43AM: ---- waiting on 1 changes [10/11 done] ----
+11:06:43AM: ongoing: reconcile deployment/secretgen-controller (apps/v1) namespace: secretgen-controller
+11:06:43AM:  ^ Waiting for generation 2 to be observed
+11:06:43AM:  L ok: waiting on replicaset/secretgen-controller-5cfcb678f8 (apps/v1) namespace: secretgen-controller
+11:06:43AM:  L ongoing: waiting on pod/secretgen-controller-5cfcb678f8-nl25s (v1) namespace: secretgen-controller
+11:06:43AM:     ^ Pending: ContainerCreating
+11:06:44AM: ongoing: reconcile deployment/secretgen-controller (apps/v1) namespace: secretgen-controller
+11:06:44AM:  ^ Waiting for 1 unavailable replicas
+11:06:44AM:  L ok: waiting on replicaset/secretgen-controller-5cfcb678f8 (apps/v1) namespace: secretgen-controller
+11:06:44AM:  L ongoing: waiting on pod/secretgen-controller-5cfcb678f8-nl25s (v1) namespace: secretgen-controller
+11:06:44AM:     ^ Pending: ContainerCreating
+11:06:52AM: ok: reconcile deployment/secretgen-controller (apps/v1) namespace: secretgen-controller
+11:06:52AM: ---- applying complete [11/11 done] ----
+11:06:52AM: ---- waiting complete [11/11 done] ----
+
+Succeeded
