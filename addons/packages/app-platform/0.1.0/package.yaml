@@ -13,7 +13,7 @@ spec:
     spec:
       fetch:
         - imgpkgBundle:
-            image: "harbor-repo.vmware.com/mstergianis/meta-package-bundle@sha256:174f79f31b1d8c76c4498fbf3cdb70fd12675ba49d1f6838bbe8662524f4f93c"
+            image: "dev.registry.tanzu.vmware.com/tap-gui/meta-package-bundle:0.1.0"
       template:
         - ytt:
             paths:
@@ -21,7 +21,7 @@ spec:
         - kbld:
             paths:
               - "-"
-              - .imgpkg/images.yaml
+              - .imgpkg/images.yml
       deploy:
         - kapp: {}
   valuesSchema:
@@ -29,7 +29,7 @@ spec:
       type: object
       additionalProperties: false
       properties:
-        placeholder:
-          type: string
-          default: "empty"
-          description: "placeholder for the values file"
+        contour:
+          type: object
+          default: {}
+          description: "contour values"
