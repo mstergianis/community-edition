@@ -1,0 +1,29 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  name: contour
+  namespace: app-platform-install
+  annotations:
+    kapp.k14s.io/change-group: contour
+    kapp.k14s.io/change-rule.serviceaccount: "delete before deleting serviceaccount"
+spec:
+  serviceAccountName: app-platform-install-sa
+  packageRef:
+    refName: contour.community.tanzu.vmware.com
+    versionSelection:
+      constraints: 1.19.1
+  values:
+    - secretRef:
+        name: contour-values
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: contour-values
+  namespace: app-platform-install
+stringData:
+  values.yaml: #@ yaml.encode(data.values.contour)
