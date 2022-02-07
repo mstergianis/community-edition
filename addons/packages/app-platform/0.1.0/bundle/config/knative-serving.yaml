@@ -1,0 +1,28 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  name: knative-serving
+  namespace: app-platform-install
+  annotations:
+    kapp.k14s.io/change-rule.serviceaccount: "delete before deleting serviceaccount"
+spec:
+  serviceAccountName: app-platform-install-sa
+  packageRef:
+    refName: knative-serving.community.tanzu.vmware.com
+    versionSelection:
+      constraints: 1.0.0
+  values:
+    - secretRef:
+        name: knative-serving-values
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: knative-serving-values
+  namespace: app-platform-install
+stringData:
+  values.yaml: #@ yaml.encode(data.values.knative_serving)

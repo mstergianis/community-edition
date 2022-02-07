@@ -2,3 +2,5 @@
 ---
 contour: {}
 cert_manager: {}
+kpack: {}
+knative_serving: {}
