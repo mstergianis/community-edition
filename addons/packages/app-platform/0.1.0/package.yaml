@@ -33,3 +33,7 @@ spec:
           type: object
           default: {}
           description: "contour values"
+        cert_manager:
+          type: object
+          default: {}
+          description: "cert-manage values"
