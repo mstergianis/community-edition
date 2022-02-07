@@ -18,7 +18,7 @@ function addSecret {
 
 
 function installAppPlatformPackage {
-    tanzu package install "${PACKAGE}" -p meta-package.community.tanzu.vmware.com -v 0.1.0 -n "${NAMESPACE}"
+    tanzu package install "${PACKAGE}" -p app-platform.community.tanzu.vmware.com -v 0.1.0 -n "${NAMESPACE}"
 }
 
 function deleteAppPlatformPackage {
@@ -53,6 +53,10 @@ function deployDevPackage {
          -f ../../contour/1.19.1/package.yaml \
          -f ../../cert-manager/metadata.yaml \
          -f ../../cert-manager/1.6.1/package.yaml \
+         -f ../../kpack/metadata.yaml \
+         -f ../../kpack/0.5.0/package.yaml \
+         -f ../../knative-serving/metadata.yaml \
+         -f ../../knative-serving/1.0.0/package.yaml \
          -y
 }
 
