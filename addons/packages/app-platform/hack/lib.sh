@@ -1,5 +1,8 @@
 #!/bin/bash
 
+NAMESPACE=app-platform-install
+PACKAGE=app-platform
+
 function addSecret {
     # expects a password file to be passed in
     USERNAME=$1
@@ -10,16 +13,16 @@ function addSecret {
           --server dev.registry.tanzu.vmware.com \
           --export-to-all-namespaces \
           --yes \
-          --namespace app-platform-install
+          --namespace "${NAMESPACE}"
 }
 
 
 function installAppPlatformPackage {
-    tanzu package install meta-package -p meta-package.community.tanzu.vmware.com -v 0.1.0 -n app-platform-install
+    tanzu package install "${PACKAGE}" -p meta-package.community.tanzu.vmware.com -v 0.1.0 -n "${NAMESPACE}"
 }
 
 function deleteAppPlatformPackage {
-    tanzu package installed delete -n app-platform-install meta-package -y
+    tanzu package installed delete -n "${NAMESPACE}" "${PACKAGE}" -y
 }
 
 function installPrereqs {
@@ -28,33 +31,35 @@ function installPrereqs {
 }
 
 function createNS {
-    kubectl create ns app-platform-install --dry-run=client -o yaml | kubectl apply -f -
+    kubectl create ns "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
 }
 
 function createCluster {
-    kind create cluster --name meta || echo "Lazily not recreating the cluster: meta"
+    kind create cluster --name "${PACKAGE}" || echo "Lazily not recreating the cluster: ${PACKAGE}"
 }
 
 function deleteCluster {
-    kind delete cluster --name meta || echo "Lazily not deleting the non-existent cluster: meta"
+    kind delete cluster --name "${PACKAGE}" || echo "Lazily not deleting the non-existent cluster: ${PACKAGE}"
 }
 
 function deployDevPackage {
     # must be in app-platform/hack dir
     kapp deploy \
-         -a meta \
-         -n app-platform-install \
+         -a "${PACKAGE}" \
+         -n "${NAMESPACE}" \
          -f ../metadata.yaml \
          -f ../0.1.0/package.yaml \
          -f ../../contour/metadata.yaml \
          -f ../../contour/1.19.1/package.yaml \
+         -f ../../cert-manager/metadata.yaml \
+         -f ../../cert-manager/1.6.1/package.yaml \
          -y
 }
 
 function deleteDevPackage {
     kapp delete \
-         -a meta \
-         -n app-platform-install \
+         -a "${PACKAGE}" \
+         -n "${NAMESPACE}" \
          -y
 }
 

@@ -4,4 +4,5 @@ set -euo pipefail
 
 source ./lib.sh
 
-createCluster
+createNS
+installPrereqs
