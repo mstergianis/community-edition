@@ -1,0 +1,11 @@
+apiVersion: imgpkg.carvel.dev/v1alpha1
+kind: Bundle
+metadata:
+  name: app-platform
+authors:
+- name: Michael Stergianis
+  email: mstergianis@vmware.com
+- name: Chris Samp
+  email: csamp@vmware.com
+websites:
+- url: https://github.com/vmware-tanzu/community-edition/

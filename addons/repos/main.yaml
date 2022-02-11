@@ -1,6 +1,6 @@
 ---
 packages:
-  - name: meta-package
+  - name: app-platform
     versions:
       - 0.1.0
   - name: cert-manager
