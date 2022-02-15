@@ -1,0 +1,11 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: dev.registry.tanzu.vmware.com/fluxcd-source-controller/fluxcd-source-controller-image:v0.16.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v0.16.0
+          url: dev.registry.tanzu.vmware.com/fluxcd-source-controller/fluxcd-source-controller-image:v0.16.0
+  image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:9def2e498d511fd27ebee0adf2ce06fa6b3218d08f3091df6ed496c6b85bb60a
+kind: ImagesLock

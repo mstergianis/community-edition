@@ -5,12 +5,14 @@ PACKAGE=app-platform
 
 function addSecret {
     # expects a password file to be passed in
-    USERNAME=$1
-    PASSWORDFILE=$2
-    tanzu secret registry add tap-registry \
+    SECRET_NAME=$1
+    USERNAME=$2
+    PASSWORDFILE=$3
+    SERVER=$4
+    tanzu secret registry add "$SECRET_NAME" \
           --username "$USERNAME" \
           --password $(cat "$PASSWORDFILE") \
-          --server dev.registry.tanzu.vmware.com \
+          --server "$SERVER" \
           --export-to-all-namespaces \
           --yes \
           --namespace "${NAMESPACE}"
@@ -57,6 +59,10 @@ function deployDevPackage {
          -f ../../kpack/0.5.0/package.yaml \
          -f ../../knative-serving/metadata.yaml \
          -f ../../knative-serving/1.0.0/package.yaml \
+         -f ../../cartographer/metadata.yaml \
+         -f ../../cartographer/0.2.1/package.yaml \
+         -f ../../fluxcd-source-controller/metadata.yaml \
+         -f ../../fluxcd-source-controller/0.16.0/package.yaml \
          -y
 }
 
