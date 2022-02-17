@@ -2,9 +2,9 @@
 apiVersion: data.packaging.carvel.dev/v1alpha1
 kind: PackageMetadata
 metadata:
-  name: meta-package.community.tanzu.vmware.com
+  name: app-platform.community.tanzu.vmware.com
 spec:
-  displayName: "Meta-Package for TCE"
+  displayName: "App-Platform package for TCE"
   shortDescription: "Package to install a set of OSS components to get you started."
   longDescription: "Meta-Package lets you install a setup of curated components in one go."
   providerName: "VMware"

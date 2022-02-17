@@ -4,6 +4,7 @@ set -euo pipefail
 
 source ./lib.sh
 
-addSecret 'mstergianis@vmware.com' ~/tanzu/tanzunet_pass
+addSecret dev-registry 'mstergianis@vmware.com' ~/tanzu/tanzunet_pass dev.registry.tanzu.vmware.com
+addSecret prod-registry 'mstergianis@vmware.com' ~/tanzu/tanzunet_pass registry.tanzu.vmware.com
 deployDevPackage
 installAppPlatformPackage
