@@ -80,9 +80,80 @@ This may have been completed already, or be the responsibility of a PM, not a de
 
         Applies to the overall App Platform package, so unlikely to change. Review if the maintainer, description or other data is changing.
 
-1. config/[your-package]
+1. config/[your-new-package]
 
-    Create a new template file to contain the PackageInstall and other CRDs to tell `kapp` how to deploy your package. The existing files may serve as examples.
+    Create a new template file to contain the PackageInstall and other CRDs to tell `kapp` how to deploy your package within App Platform. The existing files in config may serve as examples. Below is the kpack.yaml that includes kpack into app-platform.
 
+    ```
+    #@ load("@ytt:data", "data")
+    #@ load("@ytt:yaml", "yaml")
+    
+    ---
+    apiVersion: packaging.carvel.dev/v1alpha1
+    kind: PackageInstall
+    metadata:
+      name: kpack
+      namespace: app-platform-install
+      annotations:
+        kapp.k14s.io/change-group: "kpack"
+        kapp.k14s.io/change-rule: "delete before deleting serviceaccount"
+    spec:
+      serviceAccountName: app-platform-install-sa
+      packageRef:
+        refName: kpack.community.tanzu.vmware.com
+        versionSelection:
+        constraints: 0.5.0
+        prereleases: {}
+      values:
+      - secretRef:
+          name: kpack-values
+    ---
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: kpack-values
+      namespace: app-platform-install
+    stringData:
+      values.yaml: #@ yaml.encode(data.values.kpack)
+    ```
+    1. `metadata.name` The name of your-new-package as it will be referenced within the cluster
+    1. `metadata.annotations.kapp.*` Describe how Kapp should lifecycle your-new-app. Can be simple as shown, although presumably new-apps could have specific requirements.
+    1. `spec.packageRef` Points to the package that will be installed. Note that the package referred to here must be separately made visible to kapp
 
+1. package.yaml
 
+    1. `metadata.name` Update as appropriate for version changes
+    1. `spec.version` Update as appropriate for version changes
+    1. `spec.template.spec.fetch.imgpkgBundle.image` Update as approprite, see next step
+    1. spec.valuesSchema
+
+        This is a passthrough section for configuration details that will be overlaid to the sub-package's configuration. Add a section for your-new-package.
+        ```
+        ...
+        properties:
+          your-new-package:
+            type: object
+            default: {}
+            description: "contour values"
+        ...
+        ```
+
+1. Push a new app-platform bundle.
+
+    ```
+    imgpkg push -b [registry]/app-platform-package-bundle:0.1.0 -f bundle/
+    ```
+
+    A public docker hub example:
+    ```
+    imgpkg push -b index.docker.io/csamp/app-platform-package-bundle:0.1.0 -f bundle/
+    ```
+
+    A Tanzu dev example:
+    ```
+    imgpkg push -b dev.repository.tanzu.vmware.com/app-platform-package-bundle:0.1.0 -f bundle/ -u [username] -p [password]
+    ```
+
+ 1. Run kapp deploy, until the upstream repository is updated.
+
+ 1. ` tanzu package install app-platform -p app-platform.community.tanzu.vmware.com -v 0.1.0 -n app-platform-install`
