@@ -51,14 +51,6 @@ function deployDevPackage {
          -n "${NAMESPACE}" \
          -f ../metadata.yaml \
          -f ../0.1.0/package.yaml \
-         -f ../../contour/metadata.yaml \
-         -f ../../contour/1.19.1/package.yaml \
-         -f ../../cert-manager/metadata.yaml \
-         -f ../../cert-manager/1.6.1/package.yaml \
-         -f ../../kpack/metadata.yaml \
-         -f ../../kpack/0.5.0/package.yaml \
-         -f ../../knative-serving/metadata.yaml \
-         -f ../../knative-serving/1.0.0/package.yaml \
          -f ../../cartographer/metadata.yaml \
          -f ../../cartographer/0.2.1/package.yaml \
          -f ../../fluxcd-source-controller/metadata.yaml \
@@ -75,5 +67,6 @@ function deleteDevPackage {
 
 function pushBundle {
     # from within the app-platform/0.1.0
-    imgpkg push -b dev.registry.tanzu.vmware.com/tap-gui/meta-package-bundle:0.1.0 -f bundle/
+    # imgpkg push -b dev.registry.tanzu.vmware.com/tap-gui/meta-package-bundle:0.1.0 -f bundle/
+    imgpkg push -b index.docker.io/csamp/app-platform-package-bundle:0.1.0 -f bundle/
 }

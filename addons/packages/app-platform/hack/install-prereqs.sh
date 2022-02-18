@@ -5,4 +5,4 @@ set -euo pipefail
 source ./lib.sh
 
 createNS
-installPrereqs
+# installPrereqs - kapp for non-TCE clusters  -secretgen for all
