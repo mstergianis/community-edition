@@ -3,11 +3,11 @@ apiVersion: packaging.carvel.dev/v1alpha1
 kind: PackageInstall
 metadata:
   name: fluxcd-source-controller
-  namespace: tap-install
+  namespace: app-platform-install
   annotations:
     kapp.k14s.io/change-rule: "delete before deleting serviceaccount"
 spec:
-  serviceAccountName: tap-install-sa
+  serviceAccountName: app-platform-install-sa
   packageRef:
     refName: fluxcd.source.controller.tanzu.vmware.com
     versionSelection:
