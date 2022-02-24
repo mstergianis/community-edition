@@ -27,8 +27,11 @@ function deleteAppPlatformPackage {
     tanzu package installed delete -n "${NAMESPACE}" "${PACKAGE}" -y
 }
 
-function installPrereqs {
+function installKappController {
     kapp deploy -y -a kc -f https://github.com/vmware-tanzu/carvel-kapp-controller/releases/download/v0.32.0/release.yml
+}
+
+function installSecretGenController {
     kapp deploy -y -a sg -f https://github.com/vmware-tanzu/carvel-secretgen-controller/releases/download/v0.7.1/release.yml
 }
 
