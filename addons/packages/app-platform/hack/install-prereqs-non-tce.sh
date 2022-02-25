@@ -6,3 +6,4 @@ source ./lib.sh
 
 createNS
 installSecretGenController
+installKappController

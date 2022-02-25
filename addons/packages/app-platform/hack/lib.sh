@@ -61,6 +61,29 @@ function deployDevPackage {
          -y
 }
 
+function deployDevPackageExtras {
+    # must be in app-platform/hack dir
+    kapp deploy \
+         -a "${PACKAGE}-extra" \
+         -n "${NAMESPACE}" \
+         -f ../../contour/metadata.yaml \
+         -f ../../contour/1.19.1/package.yaml \
+         -f ../../cert-manager/metadata.yaml \
+         -f ../../cert-manager/1.6.1/package.yaml \
+         -f ../../kpack/metadata.yaml \
+         -f ../../kpack/0.5.0/package.yaml \
+         -f ../../knative-serving/metadata.yaml \
+         -f ../../knative-serving/1.0.0/package.yaml \
+         -y
+}
+
+function deleteDevPackageExtras {
+    kapp delete \
+         -a "${PACKAGE}-extra" \
+         -n "${NAMESPACE}" \
+         -y
+}
+
 function deleteDevPackage {
     kapp delete \
          -a "${PACKAGE}" \
