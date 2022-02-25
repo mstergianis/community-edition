@@ -29,6 +29,13 @@ spec:
       type: object
       additionalProperties: false
       properties:
+        excluded_packages:
+          type: array
+          default: []
+          items:
+            type: string
+          description:
+            "A list of package refs that should be excluded from app-platform"
         contour:
           type: object
           default: {}

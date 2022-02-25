@@ -14,7 +14,7 @@ spec:
     spec:
       fetch:
       - imgpkgBundle:
-          image: dev.registry.tanzu.vmware.com/fluxcd-source-controller/fluxcd-source-controller-bundle@sha256:3e90cb4294f8bf03007ba6fe9b5f30ed28ea506e1c225ac72a32601e82b8d988
+          image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:3e90cb4294f8bf03007ba6fe9b5f30ed28ea506e1c225ac72a32601e82b8d988
       template:
       - ytt:
           inline:

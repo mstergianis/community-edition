@@ -1,5 +1,8 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:yaml", "yaml")
+#@ load("_exclusions.star", "exclusions")
+
+#@ if exclusions.is_pkg_enabled("knative-serving.community.tanzu.vmware.com"):
 
 ---
 apiVersion: packaging.carvel.dev/v1alpha1
@@ -26,3 +29,5 @@ metadata:
   namespace: app-platform-install
 stringData:
   values.yaml: #@ yaml.encode(data.values.knative_serving)
+
+#@ end

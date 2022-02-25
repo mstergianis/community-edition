@@ -1,3 +1,7 @@
+#@ load("_exclusions.star", "exclusions")
+
+#@ if exclusions.is_pkg_enabled("fluxcd.source.controller.tanzu.vmware.com"):
+
 ---
 apiVersion: packaging.carvel.dev/v1alpha1
 kind: PackageInstall
@@ -12,3 +16,5 @@ spec:
     refName: fluxcd.source.controller.tanzu.vmware.com
     versionSelection:
       constraints: 0.16.0
+
+#@ end
