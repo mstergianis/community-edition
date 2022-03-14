@@ -1,0 +1,271 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+
+# Service account, rolebinding and role for Cartographer to access the supply chain components
+# on the workload's behalf
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workload-user-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: workload-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: workload-role
+subjects:
+  - kind: ServiceAccount
+    name: workload-user-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: workload-role
+rules:
+  - apiGroups:
+      - source.toolkit.fluxcd.io
+      - kpack.io
+      - kapp.k14s.io/v1alpha1
+      - kappctrl.k14s.io
+      - serving.knative.dev/v1
+      - serving.knative.dev
+      - carto.run
+      - '*'
+    resources:
+      - gitrepositories
+      - images
+      - configs
+      - apps
+      - services
+      - runnables
+      - configmaps
+    verbs:
+      - list
+      - create
+      - update
+      - delete
+      - patch
+      - watch
+      - get
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dockerhub-registry-credentials
+  annotations:
+    kpack.io/docker: https://index.docker.io/v1/
+type: kubernetes.io/basic-auth
+stringData:
+  username: "csamp"
+  password: "S0fitel4$"
+---
+# Service account for kpack to access the external registry
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kpack-service-account
+  namespace: default
+secrets:
+- name: #@ data.values.kpack.secrets.name
+imagePullSecrets:
+- name: #@ data.values.kpack.imagePullSecrets.name
+---
+#@ buildpack_versions = {
+#@   "dotnet-core": "latest",
+#@   "go": "latest",
+#@   "java": "latest",
+#@   "nodejs": "latest",
+#@   "php": "latest",
+#@   "ruby": "latest",
+#@ }
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: default
+spec:
+  sources:
+#@ for language in data.values.kpack.languages:
+  - image: #@ "gcr.io/paketo-buildpacks/{}:{}".format(language,buildpack_versions[language])
+#@ end
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStack
+metadata:
+  name: base
+spec:
+  id: "io.buildpacks.stacks.bionic"
+  buildImage:
+    image: "paketobuildpacks/build:base-cnb"
+  runImage:
+    image: "paketobuildpacks/run:base-cnb"
+---
+apiVersion: kpack.io/v1alpha2
+kind: Builder
+metadata:
+  name: builder
+  namespace: default
+spec:
+  serviceAccountName: kpack-service-account
+  tag: #@ data.values.kpack.builder.tag
+  stack:
+    name: base
+    kind: ClusterStack
+  store:
+    name: default
+    kind: ClusterStore
+  order:
+#@ for language in data.values.kpack.languages:
+  - group:
+    - id: #@ "paketo-buildpacks/{}".format(language)
+#@ end
+---
+#
+apiVersion: carto.run/v1alpha1
+kind: ClusterSourceTemplate
+metadata:
+  name: source
+spec:
+  urlPath: .status.artifact.url
+  revisionPath: .status.artifact.revision
+
+  template:
+    apiVersion: source.toolkit.fluxcd.io/v1beta1
+    kind: GitRepository
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      interval: 1m0s
+      url: $(workload.spec.source.git.url)$
+      ref: $(workload.spec.source.git.ref)$
+      gitImplementation: libgit2
+      ignore: ""
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterImageTemplate
+metadata:
+  name: image
+spec:
+  params:
+    - name: image_prefix
+      default: #@ data.values.supply_chain.image_prefix
+
+  imagePath: .status.latestImage
+
+  template:
+    apiVersion: kpack.io/v1alpha2
+    kind: Image
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      tag: $(params.image_prefix)$$(workload.metadata.name)$
+      serviceAccountName: kpack-service-account
+      builder:
+       kind: Builder
+       name: builder
+      source:
+        blob:
+          url: $(sources.source.url)$
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterTemplate
+metadata:
+  name: app-deploy
+spec:
+  template:
+    apiVersion: kappctrl.k14s.io/v1alpha1
+    kind: App
+    metadata:
+      name: $(workload.metadata.name)$
+    spec:
+      serviceAccountName: workload-user-sa
+      fetch:
+        - inline:
+            paths:
+              manifest.yml: |
+                ---
+                apiVersion: kapp.k14s.io/v1alpha1
+                kind: Config
+                rebaseRules:
+                  - path:
+                      - metadata
+                      - annotations
+                      - serving.knative.dev/creator
+                    type: copy
+                    sources: [new, existing]
+                    resourceMatchers: &matchers
+                      - apiVersionKindMatcher:
+                          apiVersion: serving.knative.dev/v1
+                          kind: Service
+                  - path:
+                      - metadata
+                      - annotations
+                      - serving.knative.dev/lastModifier
+                    type: copy
+                    sources: [new, existing]
+                    resourceMatchers: *matchers
+                ---
+                apiVersion: serving.knative.dev/v1
+                kind: Service
+                metadata:
+                  name: $(workload.metadata.name)$
+                spec:
+                  template:
+                    metadata:
+                      annotations:
+                        autoscaling.knative.dev/minScale: "1"
+                    spec:
+                      serviceAccountName: workload-user-sa
+                      containers:
+                        - name: workload
+                          image: $(images.image.image)$
+                          securityContext:
+                            runAsUser: 1000
+      template:
+        - ytt: {}
+      deploy:
+        - kapp: {}
+
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterSupplyChain
+metadata:
+  name: supply-chain
+spec:
+  serviceAccountRef:
+    name: workload-user-sa
+  selector:
+    apps.tanzu.vmware.com/workload-type: web
+
+  #
+  #     source-provider                   fluxcd/GitRepository
+  #       <--[src]-- source-tester        carto.run/Runnable --> tekton/TaskRun
+  #          <--[src]-- image-builder     kpack/Image
+  #             <--[img]-- deployer       kapp-ctrl/App
+  #
+  resources:
+    - name: source-provider
+      templateRef:
+        kind: ClusterSourceTemplate
+        name: source
+    - name: image-builder
+      templateRef:
+        kind: ClusterImageTemplate
+        name: image
+      params:
+        - name: image_prefix
+          value: #@ data.values.supply_chain.image_prefix
+      sources:
+        - resource: source-provider
+          name: source
+    - name: deployer
+      templateRef:
+        kind: ClusterTemplate
+        name: app-deploy
+      images:
+        - resource: image-builder
+          name: image
