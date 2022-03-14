@@ -1,3 +1,6 @@
+### 
+# Tells Contour to create a ClusterIP ingress for ease in local
+# deployments. loadbalancer could be used if provided, e.g. metallb or nginx.
 
 contour:
   envoy:
@@ -6,20 +9,35 @@ contour:
     hostPorts:
       enable: true
 
+### 
+# Configures a localhost mapping for knative, for local environments. DNS
+# could be added
+
 knative_serving:
   domain:
     type: real
     name: 127-0-0-1.sslip.io
 
+###
+# Tells kpack where to locate images used to build an app, including the
+# final Image produced for deployment.
+#
+# This example shows the use of a personal dockerhub.
+
 kpack:
   # name of registry secret where build artifacts are stored
   registry:
     url: https://index.docker.io/v1/
-    username: csamp
-    password: S0fitel4$
+    username: [REDACTED docker username]
+    password: [REDACTED docker password]
+
   builder:
     # path to the container repository where kpack build artifacts are stored
-    tag: csamp/builder
+    tag: [REDACTED username/build] 
+
+  # The registry prefix, which includes the repository name and an arbitrary prefix
+  image_prefix: [REDACTED username/app-toolkit-]
+
   # A comma-separated list of languages e.g. [java,nodejs] that will be supported for development
   # Allowed values are:
   # - java
@@ -29,9 +47,3 @@ kpack:
   # - ruby
   # - php
   languages: [java]
-
-supply_chain:
-  image_prefix: csamp/
-
-
-
